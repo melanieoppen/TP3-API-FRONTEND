@@ -38,7 +38,7 @@ function mostrarPersonajes(listaPersonajes) {
 
 
 function filtrar(){
-let personajesFiltrados = personaje.filter(personaje => {
+let personajesFiltrados = personajes.filter(personaje => {
   return personaje.house.includes(filtroCasa.value)
 });
 
