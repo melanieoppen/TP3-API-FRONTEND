@@ -1,9 +1,9 @@
-const limite = 50
-fetch('https://hp-api.onrender.com/api/characters')
+
+fetch('https://api.disneyapi.dev/character')
 .then(r=>r.json())
 .then(data => {
     console.log(data);
-    personajes = data;
+    personajes = data.data;
     mostrarPersonajes(personajes);
     actualizarFiltros();
 })
@@ -13,94 +13,81 @@ fetch('https://hp-api.onrender.com/api/characters')
 
 let personajes = []
 
-const contenedorPersonajes = document.getElementById("contenedor")
-const filtroCasa = document.getElementById("filtroCasas")
+const contenedorPersonajes = document.getElementById("personajes-container")
+const filtroPeliculas = document.getElementById("filtroPelicula")
 const busqueda = document.getElementById("searchInput")
 
-function mostrarPersonajes(listaPersonajes) {
-    contenedorPersonajes.innerHTML='';
-    listaPersonajes.forEach(personaje => {
-        contenedorPersonajes.innerHTML+=
-        `<article class="card" id="card">
-            <h1 class="nombre">${personaje.name}</h1>
-            <p class="nombresalternativos">${personaje.alternate_names}</p>
-            <p class="especie">${personaje.species}</p>
-            <h2 class="casa">${personaje.house}</h2>
-            <p class="fechanacimiento">Nació en: ${personaje.dateOfBirth}</p>
-            <ul class="varita-lista"> Varita:
-                    <li>Madera: ${personaje.wand.wood}</li>
-                    <li>Núcleo: ${personaje.wand.core}</li>
-                    <li>Longitud: ${personaje.wand.length}</li>
-            <img src="${personaje.image}" alt="${personaje.image}}" class="imagen">
-        </article>`
+function mostrarPersonajes(personajes) {
+  contenedorPersonajes.innerHTML = '';
+
+  personajes.forEach(personaje => {
+      contenedorPersonajes.innerHTML +=
+      `<article class="card">
+          <h1 class="nombre">${personaje.name}</h1>
+          <p class="peliculas" id="peliculas">Películas: ${personaje.films.join(", ")}</p>
+          <p class="series" id="series">Series: ${personaje.tvShows.join(", ")}</p>
+          <p class="videojuegos" id="videojuegos" >Videojuego: ${personaje.videoGames.join(", ")}</p>
+          <img src="${personaje.imageUrl}" alt="${personaje.name}" class="imagen">
+      </article>`;
+      let tarjeta = contenedorPersonajes.lastElementChild
+        let series = tarjeta.querySelector(".series");
+        let peliculas = tarjeta.querySelector(".peliculas");
+        let videojuegos = tarjeta.querySelector(".videojuegos");
+
+        if (personaje.tvShows.length === 0) {
+            series.remove();
+        }
+
+        if (personaje.films.length === 0) {
+            peliculas.remove();
+        }
+
+        if (personaje.videoGames.length === 0) {
+            videojuegos.remove();
+        }
     });
 }
 
+function filtrar() {
 
-function filtrar(){
-let personajesFiltrados = personajes.filter(personaje => {
-  return personaje.house.includes(filtroCasa.value)
-});
+  if (filtroPeliculas.value === "") {
+      mostrarPersonajes(personajes);
+  } else {
+      let personajesFiltrados = personajes.filter(personaje => {
+          return personaje.films.includes(filtroPeliculas.value);
+      });
 
-mostrarPersonajes(personajesFiltrados);
+      mostrarPersonajes(personajesFiltrados);
+  }
 }
 
 function buscar() {
-let personajesFiltrados = personajes.filter( personaje=> {
-  return personaje.name.toLowerCase().includes(busqueda.value.toLowerCase())
-      || personaje.alternate_names.toLowerCase().includes(busqueda.value.toLowerCase())
-      || personaje.species.toLowerCase().includes(busqueda.value.toLowerCase())
-})
+  let personajesFiltrados = personajes.filter(personaje => {
+      return personaje.name.toLowerCase().includes(busqueda.value.toLowerCase())
+          || personaje.tvShows.join(" ").toLowerCase().includes(busqueda.value.toLowerCase())
+          || personaje.films.join(" ").toLowerCase().includes(busqueda.value.toLowerCase())
+  });
 
-mostrarPersonajes(personajesFiltrados)
+  mostrarPersonajes(personajesFiltrados);
 }
 
 function actualizarFiltros() {
-    let casas = [];
-    personajes.forEach(personaje => {
-      if (!casas.includes(personaje.house)) {
-        casas.push(personaje.house);
-      }
-    });
-  
-    filtroCasa.innerHTML = '<option value="">Todas las casas</option>'; // Default option
-    casas.forEach(casa => {
-      filtroCasa.innerHTML += `<option value="${casa}">${casa}</option>`;
-    });
-  }
-  
-  filtroCasa.addEventListener("change", filtrar);
-  searchInput.addEventListener("input", buscar);
-/*
-filtrocasa.addEventListener("change" , filtrar) 
-filtroProvincia.addEventListener("change" , filtrar)
-busqueda.addEventListener("input", buscar)
+  let peliculas = [];
 
-const agregarIngredientebtn = document.getElementById("agregarIngrediente")
-const ingredientesContainer = document.querySelector(".contenedor-ingredientes")
-
-agregarIngredientebtn.addEventListener("click", () => {
-  ingredientesContainer.innerHTML +=
-    '<input type="text" class="ingrediente" placeholder="Ingredientes" required>';
-});
-
-function actualizarFiltros() {
-  let categorias = []
-  personajes.forEach(comida => {
-    if( !categorias.includes(comida.categoria)) {
-    categorias.push(comida.categoria)
-    }
+  personajes.forEach(personaje => {
+      personaje.films.forEach(pelicula => {
+          if (!peliculas.includes(pelicula)) {
+              peliculas.push(pelicula);
+          }
+      });
   });
-  let provincias = []
-  personajes.forEach(comida => {
-    if( !provincias.includes(comida.provincia)) {
-    provincias.push(comida.provincia)
-    }
+
+  filtroPeliculas.innerHTML = '<option value="">Todas las películas</option>';
+
+  peliculas.forEach(pelicula => {
+      filtroPeliculas.innerHTML += `<option value="${pelicula}">${pelicula}</option>`;
   });
-  categorias.forEach(categoria => {
-  filtroCategoria.innerHTML += `<option value="${categoria}">${categoria}</option>`
-  })
-  provincias.forEach(provincia => {
-    filtroProvincia.innerHTML += `<option value="${provincia}">${provincia}</option>`
-    })
-}*/
+}
+  
+ filtroPeliculas.addEventListener("change", filtrar);
+busqueda.addEventListener("input", buscar);
