@@ -85,7 +85,7 @@ function actualizarFiltros() {
   filtroPeliculas.innerHTML = '<option value="">Todas las películas</option>';
 
   peliculas.forEach(pelicula => {
-      filtroPeliculas.innerHTML += `<option value="${pelicula}">${pelicula}</option>`;
+      filtroPeliculas.innerHTML += `<option value="${pelicula}" class="option">${pelicula}</option>`;
   });
 }
   
