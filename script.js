@@ -6,6 +6,7 @@ fetch('https://api.disneyapi.dev/character')
     personajes = data.data;
     mostrarPersonajes(personajes);
     actualizarFiltros();
+    actualizarFiltrosSeries();
 })
 .catch(error => {
     console.log("Error al encontrar la API", error)
@@ -15,6 +16,7 @@ let personajes = []
 
 const contenedorPersonajes = document.getElementById("personajes-container")
 const filtroPeliculas = document.getElementById("filtroPelicula")
+const filtroSeries = document.getElementById("filtroSerie")
 const busqueda = document.getElementById("searchInput")
 
 function mostrarPersonajes(personajes) {
@@ -24,9 +26,11 @@ function mostrarPersonajes(personajes) {
       contenedorPersonajes.innerHTML +=
       `<article class="card">
           <h1 class="nombre">${personaje.name}</h1>
+          <div class="informacion" id="texto">
           <p class="peliculas" id="peliculas">Películas: ${personaje.films.join(", ")}</p>
           <p class="series" id="series">Series: ${personaje.tvShows.join(", ")}</p>
           <p class="videojuegos" id="videojuegos" >Videojuego: ${personaje.videoGames.join(", ")}</p>
+          <div>
           <img src="${personaje.imageUrl}" alt="${personaje.name}" class="imagen">
       </article>`;
       let tarjeta = contenedorPersonajes.lastElementChild
@@ -46,20 +50,26 @@ function mostrarPersonajes(personajes) {
             videojuegos.remove();
         }
     });
+    
 }
 
 function filtrar() {
-
-  if (filtroPeliculas.value === "") {
-      mostrarPersonajes(personajes);
-  } else {
-      let personajesFiltrados = personajes.filter(personaje => {
-          return personaje.films.includes(filtroPeliculas.value);
-      });
-
-      mostrarPersonajes(personajesFiltrados);
+    let personajesFiltrados = personajes;
+  
+    if (filtroPeliculas.value !== "") {
+        personajesFiltrados = personajesFiltrados.filter(personaje => {
+            return personaje.films.includes(filtroPeliculas.value);
+        });
+    }
+  
+    if (filtroSeries.value !== "") {
+        personajesFiltrados = personajesFiltrados.filter(personaje => {
+            return personaje.tvShows.includes(filtroSeries.value);
+        });
+    }
+  
+    mostrarPersonajes(personajesFiltrados);
   }
-}
 
 function buscar() {
   let personajesFiltrados = personajes.filter(personaje => {
@@ -88,6 +98,24 @@ function actualizarFiltros() {
       filtroPeliculas.innerHTML += `<option value="${pelicula}" class="option">${pelicula}</option>`;
   });
 }
+function actualizarFiltrosSeries() {
+    let series = [];
+  
+    personajes.forEach(personaje => {
+        personaje.tvShows.forEach(serie => {
+            if (!series.includes(serie)) {
+                series.push(serie);
+            }
+        });
+    });
+  
+    filtroSeries.innerHTML = '<option value="">Todas las series</option>';
+  
+    series.forEach(serie => {
+        filtroSeries.innerHTML += `<option value="${serie}" class="option">${serie}</option>`;
+    });
+  }
   
  filtroPeliculas.addEventListener("change", filtrar);
+ filtroSeries.addEventListener("change", filtrar);
 busqueda.addEventListener("input", buscar);
