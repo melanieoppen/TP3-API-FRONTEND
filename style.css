@@ -12,7 +12,7 @@ body {
   align-items: center;
 }
 .personajes-container {
-  width: 100vw;
+  width: 100%;
   gap: 1rem;
   display: flex;
   justify-content: center;
@@ -21,6 +21,7 @@ body {
 .card {
   width: 31vw;
   min-height: 33vh;
+  max-height: 66vh;
   padding: 1rem;
   border: 0.2rem solid #465ca1;
   border-radius: 0.5rem;
@@ -62,20 +63,27 @@ body{
     align-items: center;
 }
 .buscador{
-    width: 60%;
+    width: 48%;
     height: 6vh;
     background: none;
     color: none;
     border:none;
-    border: 0.2rem solid rgb(173, 173, 173);
+    border: 0.15rem solid rgb(128, 129, 168);
     border-radius: 2rem;
     background-color: aliceblue;
+}
+.logo{
+  width: 10vw;
+  height: 8vh;
+    object-fit: contain;
 }
 .imagen{
   align-self: center;
     width: 15vw;
     aspect-ratio: 1/1;
     object-fit: cover;
+    border-radius: 0.7rem;
+    border: 0.2rem solid rgb(85, 102, 252)
 }
 .seleccionarpelicula{
   width: 19%;
@@ -83,7 +91,7 @@ body{
     background: none;
     color: none;
     border:none;
-  border: 0.2rem solid lightblue;
+  border: 0.15rem solid rgb(128, 129, 168);
     border-radius: 2rem;
     background-color: aliceblue;
     display: flex;

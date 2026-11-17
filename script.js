@@ -30,7 +30,7 @@ function mostrarPersonajes(personajes) {
           <p class="peliculas" id="peliculas">Películas: ${personaje.films.join(", ")}</p>
           <p class="series" id="series">Series: ${personaje.tvShows.join(", ")}</p>
           <p class="videojuegos" id="videojuegos" >Videojuego: ${personaje.videoGames.join(", ")}</p>
-          <div>
+          </div>
           <img src="${personaje.imageUrl}" alt="${personaje.name}" class="imagen">
       </article>`;
       let tarjeta = contenedorPersonajes.lastElementChild
